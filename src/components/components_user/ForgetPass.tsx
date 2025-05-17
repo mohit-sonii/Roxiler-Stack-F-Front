@@ -10,7 +10,7 @@ import { user } from "@/util/Route";
 import { PassVali, zodForgetPassVali } from "./zodValidatorUser";
 import { userStore } from "@/util/store";
 
-const UserLogin = () => {
+const ForgetPass = () => {
    const router = useRouter();
    const { userId } = userStore();
 
@@ -65,15 +65,6 @@ const UserLogin = () => {
             className="flex flex-col w-[90%] xl:w-1/2"
          >
             <div className="flex flex-col gap-2">
-               <label htmlFor="email">Email</label>
-               <input
-                  {...register("email")}
-                  defaultValue={""}
-                  type="text"
-                  placeholder="Enter your personal email"
-               />
-            </div>
-            <div className="flex flex-col gap-2">
                <label htmlFor="password">Password</label>
                <input
                   {...register("password")}
@@ -82,9 +73,18 @@ const UserLogin = () => {
                   placeholder="Enter Password"
                />
             </div>
+            <div className="flex flex-col gap-2">
+               <label htmlFor="confirmPass">Confirm Password</label>
+               <input
+                  {...register("confirmPass")}
+                  defaultValue={""}
+                  type="text"
+                  placeholder="Re Enter Password"
+               />
+            </div>
          </form>
       </div>
    );
 };
 
-export default UserLogin;
+export default ForgetPass;
