@@ -3,22 +3,16 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import axios from 'axios'
-import { user } from '@/util/Route'
+import { owner } from '@/util/Route'
 
 const page = () => {
     const router = useRouter()
-    const handleNavigate = ()=>{
-        router.push("/stores")
-    }
-    const navigateToForgetPass=()=>{
-      router.push("/update-pass")
-    }
     const handleLogout = async()=>{
         const loading = toast.loading("Please Wait ..")
         try{
-            const result = await axios.get(`${user}/logout`)
+            const result = await axios.get(`${owner}/logout`)
             toast.success(result.data.message)
-            router.replace(`${user}/login`)
+            router.replace(`${owner}/login`)
         }catch(err:any){
             if(err?.message){
                 toast.error(err?.message)
@@ -26,11 +20,13 @@ const page = () => {
         }
         toast.dismiss(loading)
     }
+    const handleNavigate = ()=>{
+        router.push("/dashboard")
+    }
   return (
     <div>
       <button onClick={handleLogout}>Logout</button>
-      <button onClick={navigateToForgetPass}>Update Password</button>
-      <button onClick={handleNavigate}>View All Stores</button>
+      <button onClick={handleNavigate}>List Of Users</button>
     </div>
   )
 }

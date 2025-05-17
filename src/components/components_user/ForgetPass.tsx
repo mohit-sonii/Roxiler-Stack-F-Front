@@ -2,11 +2,11 @@
 import React, { useEffect } from "react";
 import { z } from "zod";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { user } from "@/util/Route";
+import { owner, user } from "@/util/Route";
 import { PassVali, zodForgetPassVali } from "./zodValidatorUser";
 import { userStore } from "@/util/store";
 
@@ -25,16 +25,21 @@ const ForgetPass = () => {
    const registerHandler = handleSubmit(async (data: PassVali) => {
       const loadingToast = toast.loading("Please wait...");
       try {
-         const result = await axios.post(`${user}/reset-pass/${userId}`, data, {
-            headers: {
-               "Content-Type": "multipart/form-data",
-            },
-         });
+         const pathUrl = usePathname();
+         const result = await axios.post(
+            `${pathUrl.startsWith("/u") ? user : owner}/reset-pass/${userId}`,
+            data,
+            {
+               headers: {
+                  "Content-Type": "multipart/form-data",
+               },
+            }
+         );
          toast.dismiss(loadingToast);
          if (result.status === 200) {
             toast.success(result.data.message);
             reset();
-            router.replace(`${user}/login`);
+            router.replace(`${pathUrl.startsWith("/u") ? user : owner}/login`);
          } else {
             toast.error(result.data.message);
          }
@@ -59,7 +64,7 @@ const ForgetPass = () => {
 
    return (
       <div>
-         <h1> User Login Form</h1>
+         <h1> Update Password Form</h1>
          <form
             onSubmit={registerHandler}
             className="flex flex-col w-[90%] xl:w-1/2"

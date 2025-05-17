@@ -2,12 +2,13 @@
 import React, { useEffect } from "react";
 import { z } from "zod";
 import toast from "react-hot-toast";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { AuthUserLoginType, authUserLoginValidator } from "./zodValidator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { user } from "@/util/Route";
+import { admin, owner, user } from "@/util/Route";
 import { userStore } from "@/util/store";
 
 const UserLogin = () => {
@@ -24,7 +25,8 @@ const UserLogin = () => {
    const loginHandler = handleSubmit(async (data: AuthUserLoginType) => {
       const loadingToast = toast.loading("Please wait...");
       try {
-         const result = await axios.post(`${user}/login`, data, {
+         const currentPath = usePathname()
+         const result = await axios.post(currentPath.startsWith("/o")?owner : currentPath.startsWith("/a")? admin : user, data, {
             headers: {
                "Content-Type": "multipart/form-data",
             },
@@ -35,7 +37,9 @@ const UserLogin = () => {
           const userId = result.data
           updateUserId(userId)
           reset()
-          router.replace(`${user}/stores`)
+          if(currentPath.startsWith("/u")){
+             router.replace(`${user}/stores`)
+          }
          }else{
           toast.error(result.data.message)
          }
@@ -60,7 +64,7 @@ const UserLogin = () => {
 
    return (
       <div>
-         <h1> User Login Form</h1>
+         <h1> Login Form</h1>
          <form
             onSubmit={loginHandler}
             className="flex flex-col w-[90%] xl:w-1/2"
