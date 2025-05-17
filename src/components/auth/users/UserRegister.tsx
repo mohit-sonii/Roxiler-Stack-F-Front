@@ -27,7 +27,6 @@ const UserRegister = () => {
                "Content-Type": "multipart/form-data",
             },
          });
-         toast.dismiss(loadingToast)
          if (result.status === 201) {
           toast.success(result.data.message)
           reset()
@@ -40,7 +39,8 @@ const UserRegister = () => {
          if (error?.message) {
             toast.error(error.message);
          }
-         toast.dismiss(loadingToast);
+      }finally{
+         toast.dismiss(loadingToast)
       }
    });
    useEffect(() => {
@@ -95,6 +95,15 @@ const UserRegister = () => {
                   defaultValue={""}
                   type="text"
                   placeholder="Enter your home address"
+               />
+            </div>
+            <div className="flex flex-col gap-2">
+               <label htmlFor="role">Role</label>
+               <input
+                  {...register("role")}
+                  defaultValue={""}
+                  type="text"
+                  placeholder="Enter the user role"
                />
             </div>
          </form>
